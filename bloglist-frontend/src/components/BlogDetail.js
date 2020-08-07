@@ -1,12 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { deleteBlog,likeBlog } from '../reducers/blogReducer'
 
-const BlogDetail = ({ deleteAction,updateAction,blog,visible }) => {
+const BlogDetail = ({ blog,visible }) => {
+  const dispatch = useDispatch()
+
+  const like = async () => {
+    dispatch(likeBlog(blog))
+    /*clearTimeout(timeoutId)
+    dispatch(addNotification(`You voted '${anectode.content}' `,5))*/
+  }
+
+  const remove = () => {
+    dispatch(deleteBlog(blog))
+    /*clearTimeout(timeoutId)
+    dispatch(addNotification(`You voted '${anectode.content}' `,5))*/
+  }
+
+
   const currentUser = JSON.parse(window.localStorage.getItem('loggedBlogappUser')) || null
 
-  const deleteButton = (blog,currentUser) => {
+  const deleteButton = (currentUser) => {
     if(currentUser !== null && currentUser.username === blog.user.username){
-      return (<button id="btn_delete" onClick ={() => deleteAction(blog) }>Delete</button>)
+      return (<button id="btn_delete" onClick ={() => remove(blog) }>Delete</button>)
     }
     return null
   }
@@ -15,9 +32,9 @@ const BlogDetail = ({ deleteAction,updateAction,blog,visible }) => {
   return (
 
     <div className = 'blog_detail' style={visibility} >{blog.url} <br></br>
-      Likes: <span className ="likes">{blog.likes}</span> <button  id ="btn_like" onClick = { () => updateAction(blog)}> Like</button><br></br>
+      Likes: <span className ="likes">{blog.likes}</span> <button  id ="btn_like" onClick = { () => like()}> Like</button><br></br>
       Posted By: {blog.user.name }<br></br>
-      {deleteButton(blog,currentUser)}
+      {deleteButton(currentUser)}
     </div>
 
 
@@ -26,8 +43,6 @@ const BlogDetail = ({ deleteAction,updateAction,blog,visible }) => {
 }
 
 BlogDetail.propTypes = {
-  deleteAction: PropTypes.func.isRequired,
-  updateAction:PropTypes.func.isRequired,
   blog:PropTypes.object.isRequired,
   visible:PropTypes.bool.isRequired
 }

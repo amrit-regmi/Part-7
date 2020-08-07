@@ -6,25 +6,37 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import ToggleButton from './components/ToggleButton'
+import { useDispatch,useSelector } from 'react-redux'
+import { initialize } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   const [password,setPassword] = useState('')
   const [username,setUsername] = useState('')
   const [user,setUser] = useState(null)
   const [notification,setNotification] = useState(null)
 
-  const blogFormRef = useRef()
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    const requestBlogs = async () => {
+
+  const blogFormRef = useRef()
+  const blogs = useSelector(state => state)
+
+  useEffect(() => { dispatch(initialize())
+  },[dispatch])
+
+  /*useEffect(() => {
+    dispatch( initialize ())
+      const requestBlogs = async () => {
       const result = await blogService.getAll()
       result.sort((a,b) => b.likes-a.likes)
-      setBlogs(result)
+      setBlogs(result)*
     }
 
     requestBlogs()
-  }, [])
+  })*/
+
+
 
   /*
   useEffect(() => {
@@ -79,8 +91,8 @@ const App = () => {
     notify('error','Logged Out')
   }
 
-  const createBlog = async ({ title,author,url }) => {
-    try {
+  const createBlog =  ({ title,author,url }) => {
+    /*try {
       const blog = await blogService.create({ title,author,url })
       const userId = blog.user
       blog.user = {
@@ -94,12 +106,12 @@ const App = () => {
     } catch(exception) {
       console.log (exception)
       notify('error','Blog Creation Failed')
-    }
+    }*/
   }
 
 
-  const updateBlog = async (blog) => {
-    const blogObject = { id:blog.id, user:blog.user.id, title:blog.title, author:blog.author, url:blog.url, likes:blog.likes+1 }
+  const updateBlog = (blog) => {
+    /* const blogObject = { id:blog.id, user:blog.user.id, title:blog.title, author:blog.author, url:blog.url, likes:blog.likes+1 }
     try{
       const result = await blogService.update(blogObject)
       const updatedList = blogs.map( b => {
@@ -115,11 +127,11 @@ const App = () => {
     }catch(exception) {
       console.log(exception)
       notify('error','Cannot Update the Blog')
-    }
+    }*/
   }
 
-  const deleteBlog = async(blog) => {
-    if(window.confirm(`Remove blog "${blog.title}" by ${blog.author}`)){
+  const deleteBlog = (blog) => {
+    /*if(window.confirm(`Remove blog "${blog.title}" by ${blog.author}`)){
       try{
         await blogService.deleteBlog(blog)
         setBlogs(blogs.filter(b => {
@@ -130,9 +142,11 @@ const App = () => {
         notify('error','exception')
       }
 
-    }
+    }*/
 
   }
+
+ 
 
 
   return (
@@ -157,15 +171,13 @@ const App = () => {
 
           <div>
             <ToggleButton buttonLabelHidden={'Add new Entry'} buttonLabelVisible={'Cancel'} ref={blogFormRef}>
-              <BlogForm
-                createBlog = {createBlog}
-              />
+              <BlogForm/>
             </ToggleButton>
           </div>
 
 
           {blogs.map(blog =>
-            <Blog deleteAction = {deleteBlog} updateAction = {updateBlog} key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} />
           )}
         </div>
 
