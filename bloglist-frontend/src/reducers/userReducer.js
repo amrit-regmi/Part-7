@@ -27,6 +27,7 @@ export const login =  (username,password) => {
 }
 
 export const logout = () => {
+  window.localStorage.removeItem('loggedBlogappUser')
   return dispatch => (
     dispatch({
       type:'LOGOUT'

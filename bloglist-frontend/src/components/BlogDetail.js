@@ -2,21 +2,28 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { deleteBlog,likeBlog } from '../reducers/blogReducer'
+import { addNotification } from '../reducers/notificationReducer'
 
 const BlogDetail = ({ blog,visible }) => {
   const dispatch = useDispatch()
 
   const like = async () => {
-    dispatch(likeBlog(blog))
-    /*clearTimeout(timeoutId)
-    dispatch(addNotification(`You voted '${anectode.content}' `,5))*/
+    try {await dispatch(likeBlog(blog.id))
+      dispatch(addNotification({ type:'success', message: `You liked '${blog.title}' ` },5))
+    }catch(e){
+      dispatch(addNotification({ type:'error', message: `${e}` },5))
+    }
   }
 
   const remove = () => {
-    dispatch(deleteBlog(blog))
-    /*clearTimeout(timeoutId)
-    dispatch(addNotification(`You voted '${anectode.content}' `,5))*/
+    try {dispatch(deleteBlog(blog))
+      dispatch(addNotification({ type:'success', message: `You removed '${blog.content}' ` },5))
+    }catch (e){
+      dispatch(addNotification({ type:'error', message: `${e}` },5))
+    }
   }
+
+
 
 
   const currentUser = JSON.parse(window.localStorage.getItem('loggedBlogappUser')) || null

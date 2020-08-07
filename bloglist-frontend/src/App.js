@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react'
+import React, { useEffect,useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -8,59 +8,29 @@ import { useDispatch,useSelector } from 'react-redux'
 import { initialize } from './reducers/blogReducer'
 import { logout } from './reducers/userReducer'
 
+
 const App = () => {
-  const [notification,setNotification] = useState(null)
 
   const dispatch = useDispatch()
-
 
   const blogFormRef = useRef()
 
   const blogs = useSelector(state => state.blogs.sort((a,b) => b.likes-a.likes))
+
   useEffect(() => { dispatch(initialize())
   },[dispatch])
 
   const user = useSelector(state => state.users)
 
-  const notify = (type,message) => {
-    const notify = {
-      type: type,
-      message: message
-    }
-    setNotification(notify)
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
-  }
-
-  /*const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({ username,password })
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      notify('error','Wrong credentials')
-    }
-  }*/
+  const notifications = useSelector(state => state.notification)
 
   const handleLogout = () => {
-    //setUser(null)
     dispatch(logout())
-    window.localStorage.removeItem('loggedBlogappUser')
-    notify('error','Logged Out')
   }
-
-
-
 
   return (
     <>
-      <Notification notification = {notification}></Notification>
+      <Notification notifications = {notifications}></Notification>
 
       {user === null &&
         <LoginForm ></LoginForm>

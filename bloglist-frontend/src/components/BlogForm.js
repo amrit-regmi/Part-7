@@ -2,6 +2,7 @@ import React from 'react'
 import { addBlog } from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 import { useField } from '../hooks'
+import { addNotification } from '../reducers/notificationReducer'
 
 const BlogForm = ( ) => {
 
@@ -18,9 +19,16 @@ const BlogForm = ( ) => {
 
   const createBlog =  async (event) => {
     event.preventDefault()
-    await dispatch(addBlog({ title:title.value,author:author.value,url:url.value }))
-    reset()
+    try{await dispatch(addBlog({ title:title.value,author:author.value,url:url.value }))
+      reset()
+      dispatch(addNotification({ type:'success', message: `You added '${title.value}' ` },5))
+    }catch(e){
+      dispatch(addNotification({ type:'error', message: `${e}` },5))
+    }
+
   }
+
+
 
 
   return(
