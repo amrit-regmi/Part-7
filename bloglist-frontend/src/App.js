@@ -1,57 +1,48 @@
-import React, { useEffect,useRef } from 'react'
-import Blog from './components/Blog'
+import React from 'react'
+import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-import ToggleButton from './components/ToggleButton'
+import UserList from './components/UserList'
 import { useDispatch,useSelector } from 'react-redux'
-import { initialize } from './reducers/blogReducer'
 import { logout } from './reducers/userReducer'
+import { useRouteMatch } from 'react-router-dom'
 
 
 const App = () => {
 
   const dispatch = useDispatch()
 
-  const blogFormRef = useRef()
-
-  const blogs = useSelector(state => state.blogs.sort((a,b) => b.likes-a.likes))
-
-  useEffect(() => { dispatch(initialize())
-  },[dispatch])
-
-  const user = useSelector(state => state.users)
-
-  const notifications = useSelector(state => state.notification)
+  const currentuser = useSelector(state => state.users)
 
   const handleLogout = () => {
     dispatch(logout())
   }
 
+  const userUrlMatch = useRouteMatch('/users')
+
   return (
     <>
-      <Notification notifications = {notifications}></Notification>
+      <Notification ></Notification>
 
-      {user === null &&
-        <LoginForm ></LoginForm>
-      }
+      {currentuser === null && <LoginForm />}
 
-      { user !== null &&
+      { currentuser !== null &&
 
         <div>
           <h2>blogs</h2>
-          {user.name} logged in. <button onClick = {handleLogout}>Logout</button>
+          {currentuser.name} logged in. <button onClick = {handleLogout}>Logout</button>
 
+          {userUrlMatch &&  <UserList />}
+
+          {!userUrlMatch &&
           <div>
-            <ToggleButton buttonLabelHidden={'Add new Entry'} buttonLabelVisible={'Cancel'} ref={blogFormRef}>
+            <div>
               <BlogForm/>
-            </ToggleButton>
+            </div>
+            <Blogs/>
           </div>
-
-
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
+          }
         </div>
 
       }

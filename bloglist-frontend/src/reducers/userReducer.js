@@ -18,7 +18,6 @@ export const login =  (username,password) => {
     window.localStorage.setItem(
       'loggedBlogappUser', JSON.stringify(user)
     )
-    console.log(user)
     dispatch({
       type:'LOGIN',
       data: user
