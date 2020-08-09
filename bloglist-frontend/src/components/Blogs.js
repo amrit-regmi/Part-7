@@ -1,15 +1,15 @@
-import React, { useState,useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import { initialize } from '../reducers/blogReducer'
-import BlogDetail from './BlogDetail'
+import Blog from './Blog'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog }) => {
-  const [detailsVisible,setDetailsVisible] = useState(false)
+import { Link,useParams } from 'react-router-dom'
+
+const BlogLink = ({ blog }) => {
   return (
     <div className = "blog">
-      {blog.title} by {blog.author} <button id="btn_showDetail" onClick = {() => setDetailsVisible(!detailsVisible)}>{detailsVisible ? 'Hide':'ShowDetails'}</button>
-      <BlogDetail blog={blog} visible={detailsVisible}></BlogDetail>
+      <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
     </div>)
 }
 
@@ -19,11 +19,17 @@ const Blogs = () => {
 
   useEffect(() => { dispatch(initialize())
   },[dispatch])
-  return (blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+
+  const id = useParams().id
+  console.log(id)
+
+  if(id) return  <Blog blog = {blogs.find(blog => blog.id === id)}/>
+
+  return (blogs.map((blog) => <BlogLink key={blog.id} blog={blog} />)
   )
 }
 
-Blog.propTypes = {
+BlogLink.propTypes = {
   blog:PropTypes.object.isRequired
 }
 

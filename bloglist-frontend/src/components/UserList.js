@@ -1,6 +1,13 @@
 import React,{ useEffect } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import { initialize } from '../reducers/userListReducer'
+import { Link,useParams } from 'react-router-dom'
+import User from './User'
+
+
+const UserLink = ({ user }) => {
+  return (<Link to ={`/users/${user.id}`}>{user.name}</Link>)
+}
 
 const UserList = () => {
   const dispatch = useDispatch()
@@ -11,10 +18,11 @@ const UserList = () => {
 
   const users = useSelector(state => state.usersList)
 
+  const id = useParams().id
 
-  console.log (users)
+  if(id) return <User user = {users.find( user => user.id === id )}></User>
 
-  if (users === []) return null
+  if (!users) return null
 
   return(
     <div>
@@ -22,7 +30,7 @@ const UserList = () => {
       <table>
         <thead><tr><th></th><th>Blogs created</th></tr></thead>
         <tbody>
-          {users.map(user => <tr key={user.id}><td> {user.name} </td><td>{user.blogs.length}</td></tr>)}
+          {users.map(user => <tr key={user.id}><td> <UserLink user ={user}/> </td><td>{user.blogs.length}</td></tr>)}
         </tbody>
       </table>
     </div>

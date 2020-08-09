@@ -6,8 +6,7 @@ import BlogForm from './components/BlogForm'
 import UserList from './components/UserList'
 import { useDispatch,useSelector } from 'react-redux'
 import { logout } from './reducers/userReducer'
-import { useRouteMatch } from 'react-router-dom'
-
+import { Switch, Route } from 'react-router-dom'
 
 const App = () => {
 
@@ -18,8 +17,6 @@ const App = () => {
   const handleLogout = () => {
     dispatch(logout())
   }
-
-  const userUrlMatch = useRouteMatch('/users')
 
   return (
     <>
@@ -33,16 +30,29 @@ const App = () => {
           <h2>blogs</h2>
           {currentuser.name} logged in. <button onClick = {handleLogout}>Logout</button>
 
-          {userUrlMatch &&  <UserList />}
+          <Switch>
+            <Route path ='/users/:id'>
+              <UserList/>
+            </Route>
+            <Route path ='/users'>
+              <UserList />
+            </Route>
+            <Route path='/blogs/:id'>
+              <Blogs/>
+            </Route>
+            <Route path = '/'>
+              <div>
+                <div>
+                  <BlogForm/>
+                </div>
+                <Blogs/>
+              </div>
+            </Route>
+          </Switch>
 
-          {!userUrlMatch &&
-          <div>
-            <div>
-              <BlogForm/>
-            </div>
-            <Blogs/>
-          </div>
-          }
+
+
+
         </div>
 
       }
