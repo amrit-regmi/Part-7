@@ -9,6 +9,15 @@ export const addBlog = (data) => {
     })
   }
 }
+export const addComment = (data) => {
+  return async dispatch => {
+    const blog = await blogService.comment(data)
+    dispatch({
+      type:'COMMENT',
+      data: blog
+    })
+  }
+}
 
 export const likeBlog = (data) => {
   return async dispatch => {
@@ -31,19 +40,17 @@ export const deleteBlog = (data) => {
 
 }
 
-export const initialize = () => {
+export const initBlogs = () => {
   return async dispatch => {
     const blogs = await  blogService.getAll()
     dispatch({
-      type:'INIT',
+      type:'INIT_BLOGS',
       data: blogs
     })
   }
 }
 
 const reducer = (state = [], action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
 
   switch(action.type){
   case 'ADD':
@@ -58,11 +65,21 @@ const reducer = (state = [], action) => {
         return blog
       })
     )
+  case 'COMMENT':
+    return (
+      state.map(blog => {
+        if(blog.id === action.data.id){
+          blog.comment = action.data.comment
+        }
+
+        return blog
+      })
+    )
 
   case 'DELETE':
     return state.filter(blog => blog.id !== action.data.id)
 
-  case 'INIT':
+  case 'INIT_BLOGS':
     return action.data
 
   default:

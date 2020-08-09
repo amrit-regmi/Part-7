@@ -1,6 +1,6 @@
 import React,{ useEffect } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
-import { initialize } from '../reducers/userListReducer'
+import { initUsers } from '../reducers/userListReducer'
 import { Link,useParams } from 'react-router-dom'
 import User from './User'
 
@@ -13,7 +13,7 @@ const UserList = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initialize())
+    dispatch(initUsers())
   },[dispatch])
 
   const users = useSelector(state => state.usersList)
@@ -22,7 +22,7 @@ const UserList = () => {
 
   if(id) return <User user = {users.find( user => user.id === id )}></User>
 
-  if (!users) return null
+  if (users===null) return null
 
   return(
     <div>

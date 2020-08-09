@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
-import { initialize } from '../reducers/blogReducer'
+import { initBlogs } from '../reducers/blogReducer'
 import Blog from './Blog'
 import PropTypes from 'prop-types'
 
@@ -17,11 +17,10 @@ const Blogs = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs.sort((a,b) => b.likes-a.likes))
 
-  useEffect(() => { dispatch(initialize())
+  useEffect(() => { dispatch(initBlogs())
   },[dispatch])
 
   const id = useParams().id
-  console.log(id)
 
   if(id) return  <Blog blog = {blogs.find(blog => blog.id === id)}/>
 
