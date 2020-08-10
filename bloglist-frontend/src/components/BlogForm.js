@@ -5,9 +5,18 @@ import { useField } from '../hooks'
 import { addNotification } from '../reducers/notificationReducer'
 import ToggleButton from './ToggleButton'
 import  { useRef } from 'react'
+import { Button,TextField,Box,Paper,makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+    },
+  },
+}))
 
 const BlogForm = ( ) => {
-
+  const classes = useStyles()
   const { reset: resetTitle, ...title } = useField('text')
   const { reset: resetUrl, ...url } = useField('text')
   const { reset: resetAuthor, ...author } = useField('text')
@@ -20,8 +29,7 @@ const BlogForm = ( ) => {
     resetUrl()
   }
 
-  const createBlog =  async (event) => {
-    event.preventDefault()
+  const createBlog =  async () => {
     try{await dispatch(addBlog({ title:title.value,author:author.value,url:url.value }))
       reset()
       ref.current.toggleVisibility()
@@ -36,23 +44,27 @@ const BlogForm = ( ) => {
 
 
   return(
-    <ToggleButton buttonLabelHidden={'Add new Entry'} buttonLabelVisible={'Cancel'} ref={ref}>
-      <div>
-        <h2>Create New </h2>
-        <form onSubmit = { createBlog }>
-          <div>
-      Title: <input {...title}/>
-          </div>
-          <div>
-      Author:   <input {...author}/>
-          </div>
-          <div>
-      Url:   <input {...url} />
-          </div>
-          <button id = "btn_create" type='submit'>Create</button>
-        </form>
-      </div>
-    </ToggleButton>
+
+    <Box component={Paper} p ={1}>
+      <ToggleButton buttonLabelHidden={'Add new Entry'} buttonLabelVisible={'Cancel'} ref={ref}>
+        <Box  py= {2} m = {2} >
+          <h2>Create New </h2>
+          <form className={classes.root}>
+            <div>
+              <TextField variant="outlined" label="Title"{...title} fullWidth/>
+            </div>
+            <div>
+              <TextField variant="outlined" label="author"{...author} fullWidth/>
+            </div>
+            <div>
+              <TextField variant="outlined" label="url" {...url} fullWidth />
+            </div>
+          </form>
+        </Box>
+        <Button size ="small" variant="contained" color='primary'onClick={() => createBlog()}> Create</Button>
+
+      </ToggleButton>
+    </Box>
   )
 }
 

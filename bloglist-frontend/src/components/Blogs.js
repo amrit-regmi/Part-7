@@ -3,14 +3,17 @@ import { useDispatch,useSelector } from 'react-redux'
 import { initBlogs } from '../reducers/blogReducer'
 import Blog from './Blog'
 import PropTypes from 'prop-types'
+import { List,ListItem,Divider } from '@material-ui/core'
 
 import { Link,useParams } from 'react-router-dom'
 
 const BlogLink = ({ blog }) => {
   return (
-    <div className = "blog">
-      <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
-    </div>)
+    <>
+      <ListItem key = {blog.id} component={Link} to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</ListItem>
+      <Divider />
+    </>
+  )
 }
 
 const Blogs = () => {
@@ -24,7 +27,13 @@ const Blogs = () => {
 
   if(id) return  <Blog blog = {blogs.find(blog => blog.id === id)}/>
 
-  return (blogs.map((blog) => <BlogLink key={blog.id} blog={blog} />)
+  return (
+    <>
+
+      <List>
+        {blogs.map((blog) => <BlogLink key={blog.id} blog={blog} />)}
+      </List>
+    </>
   )
 }
 

@@ -3,6 +3,7 @@ import { useDispatch,useSelector } from 'react-redux'
 import { initUsers } from '../reducers/userListReducer'
 import { Link,useParams } from 'react-router-dom'
 import User from './User'
+import { Table,TableBody,TableCell,TableHead,TableRow,TableContainer, Paper } from '@material-ui/core'
 
 
 const UserLink = ({ user }) => {
@@ -27,12 +28,14 @@ const UserList = () => {
   return(
     <div>
       <h2>Users</h2>
-      <table>
-        <thead><tr><th></th><th>Blogs created</th></tr></thead>
-        <tbody>
-          {users.map(user => <tr key={user.id}><td> <UserLink user ={user}/> </td><td>{user.blogs.length}</td></tr>)}
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead><TableRow><TableCell>Name</TableCell><TableCell>Blogs created</TableCell></TableRow></TableHead>
+          <TableBody>
+            {users.map(user => <TableRow key={user.id}><TableCell> <UserLink user ={user}/> </TableCell><TableCell>{user.blogs.length}</TableCell></TableRow>)}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
 
   )

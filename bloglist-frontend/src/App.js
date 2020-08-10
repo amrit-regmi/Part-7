@@ -13,19 +13,15 @@ const App = () => {
 
   const currentuser = useSelector(state => state.users)
 
-  if (!currentuser) return <LoginForm />
+  if (!currentuser) return <><Notification /><LoginForm /></>
 
   return (
     <>
-
-      <Navigation></Navigation>
-      <Notification ></Notification>
-
-
-
-      <h2>Blog App</h2>
+      <Navigation/>
+      <Notification />
       <Switch>
         <Route path ='/users/:id'>
+
           <UserList/>
         </Route>
         <Route path ='/users'>
@@ -37,6 +33,7 @@ const App = () => {
         <Route path = '/'>
           <div>
             <div>
+              <h2> Blogs </h2>
               <BlogForm/>
             </div>
             <Blogs/>
